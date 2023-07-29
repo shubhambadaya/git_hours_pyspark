@@ -1,0 +1,20 @@
+# Use an official Spark base image with the desired Spark version
+FROM bitnami/spark:3.1.2
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy your Python script and required files to the container
+COPY gitHours.py /app/
+COPY git-log-all-process.csv /app/
+COPY emailAliases.csv /app/
+
+# Install findspark library
+RUN pip install findspark
+
+# Set the environment variable to find Spark
+ENV SPARK_HOME /opt/bitnami/spark
+ENV PYTHONPATH $SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip
+
+# Run the Spark code when the container starts
+CMD ["python", "gitHours.py", "first_commit_add_value", "max_commit_diff_value"]
